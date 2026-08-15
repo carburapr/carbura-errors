@@ -1,8 +1,9 @@
 <img src="assets/banner.svg" alt="Carbura" width="100%">
 
-# Carbura error codes
+# Carbura Inc. 2026
 
-This is the public reference for every error the Carbura app can show.
+The public reference for every error the Carbura app can show.
+
 
 Carbura is navigation for road teams. A leader assigns destinations to drivers
 and can change a route while the truck is already moving. It is built for
