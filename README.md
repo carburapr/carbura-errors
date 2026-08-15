@@ -1,6 +1,8 @@
 <img src="assets/banner.svg" alt="Carbura" width="100%">
 
-# Carbura Inc. 2026
+<br>
+
+# Error codes
 
 The public reference for every error the Carbura app can show.
 
