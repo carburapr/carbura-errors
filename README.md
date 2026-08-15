@@ -1,3 +1,5 @@
+<img src="assets/banner.svg" alt="Carbura" width="100%">
+
 # Carbura error codes
 
 Public reference for every error the Carbura app can show.
