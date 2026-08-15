@@ -1,0 +1,464 @@
+{
+  "$comment": [
+    "Carbura error catalog — the single source of truth.",
+    "",
+    "Every error the user can see has a stable code like CBR-3021. The code",
+    "never changes once published: it is what a driver reads out on the phone",
+    "and what someone searches for in docs/ERRORS.md.",
+    "",
+    "The app (app/lib/core/errors/) and the service (services/api/src/errors.ts)",
+    "both mirror this file, and each has a test that fails if they drift.",
+    "",
+    "Ranges:",
+    "  1xxx  account and sign-in",
+    "  2xxx  teams and membership",
+    "  3xxx  trips and routes",
+    "  4xxx  location and navigation",
+    "  5xxx  places and search",
+    "  6xxx  connectivity and server",
+    "  7xxx  vehicle and setup",
+    "  8xxx  security and abuse",
+    "  9xxx  unexpected",
+    "",
+    "severity:",
+    "  info     nothing is broken, the user just needs to know",
+    "  warning  degraded but usable",
+    "  error    the action failed",
+    "  critical the person may be relying on something that is not working"
+  ],
+  "version": 1,
+  "errors": [
+    {
+      "code": "CBR-1001",
+      "slug": "invalid_credentials",
+      "severity": "error",
+      "retryable": true,
+      "summary": "Email or password is incorrect.",
+      "cause": "The credentials did not match any account.",
+      "action": "Check the email and password and try again.",
+      "note": "Deliberately does not say which of the two was wrong: telling someone an email exists confirms which accounts are real."
+    },
+    {
+      "code": "CBR-1002",
+      "slug": "session_expired",
+      "severity": "warning",
+      "retryable": false,
+      "summary": "The session has expired.",
+      "cause": "The access token is no longer valid and could not be refreshed.",
+      "action": "Sign in again."
+    },
+    {
+      "code": "CBR-1003",
+      "slug": "email_already_registered",
+      "severity": "error",
+      "retryable": false,
+      "summary": "An account already exists with that email.",
+      "cause": "Sign-up was attempted with an email that is already in use.",
+      "action": "Sign in instead, or reset the password."
+    },
+    {
+      "code": "CBR-1004",
+      "slug": "password_too_weak",
+      "severity": "error",
+      "retryable": true,
+      "summary": "The password is too short.",
+      "cause": "Passwords must be at least 10 characters.",
+      "action": "Use a phrase you can remember. Length matters more than symbols."
+    },
+    {
+      "code": "CBR-1005",
+      "slug": "account_blocked",
+      "severity": "critical",
+      "retryable": false,
+      "summary": "This account is blocked.",
+      "cause": "An administrator blocked the account for abuse.",
+      "action": "Contact whoever administers your fleet."
+    },
+    {
+      "code": "CBR-1006",
+      "slug": "signup_disabled",
+      "severity": "error",
+      "retryable": false,
+      "summary": "New accounts are closed.",
+      "cause": "The server has sign-up disabled; accounts are created by invitation.",
+      "action": "Ask your team leader to create your account."
+    },
+
+    {
+      "code": "CBR-2001",
+      "slug": "invalid_join_code",
+      "severity": "error",
+      "retryable": true,
+      "summary": "That team code is not valid or has expired.",
+      "cause": "No active team matches the code.",
+      "action": "Check the code with your leader. Codes are 8 characters and never contain the letter O or the digit 0.",
+      "note": "Says the same thing for a non-existent code and an expired one, so probing cannot tell them apart."
+    },
+    {
+      "code": "CBR-2002",
+      "slug": "too_many_join_attempts",
+      "severity": "warning",
+      "retryable": true,
+      "summary": "Too many failed attempts.",
+      "cause": "More than 10 wrong codes in 15 minutes.",
+      "action": "Wait a few minutes before trying again."
+    },
+    {
+      "code": "CBR-2003",
+      "slug": "team_full",
+      "severity": "error",
+      "retryable": false,
+      "summary": "That team is full.",
+      "cause": "The team has reached its member limit.",
+      "action": "Ask the leader to raise the limit or remove inactive members."
+    },
+    {
+      "code": "CBR-2004",
+      "slug": "not_a_member",
+      "severity": "error",
+      "retryable": false,
+      "summary": "You are not in that team.",
+      "cause": "The action requires membership, and you left or were removed.",
+      "action": "Join again with the team code."
+    },
+    {
+      "code": "CBR-2005",
+      "slug": "leader_only",
+      "severity": "error",
+      "retryable": false,
+      "summary": "Only the team leader can do that.",
+      "cause": "The action is restricted to leaders.",
+      "action": "Ask your leader.",
+      "note": "Enforced by the database, not the UI. Even a modified app gets rejected."
+    },
+    {
+      "code": "CBR-2006",
+      "slug": "team_expired",
+      "severity": "warning",
+      "retryable": false,
+      "summary": "That team has ended.",
+      "cause": "Teams are temporary and this one passed its end date.",
+      "action": "Ask your leader to create a new one."
+    },
+    {
+      "code": "CBR-2007",
+      "slug": "too_many_teams",
+      "severity": "error",
+      "retryable": false,
+      "summary": "You have reached the limit of active teams.",
+      "cause": "A person can own at most 20 active teams.",
+      "action": "Archive a team you no longer use."
+    },
+
+    {
+      "code": "CBR-3001",
+      "slug": "trip_already_active",
+      "severity": "error",
+      "retryable": false,
+      "summary": "You already have a trip in progress.",
+      "cause": "Only one trip can be live at a time.",
+      "action": "Finish or cancel the current trip first."
+    },
+    {
+      "code": "CBR-3002",
+      "slug": "trip_closed",
+      "severity": "error",
+      "retryable": false,
+      "summary": "That trip is already finished.",
+      "cause": "Completed and cancelled trips cannot be reopened.",
+      "action": "Start a new trip.",
+      "note": "Reopening an old trip would allow backdating false positions onto it."
+    },
+    {
+      "code": "CBR-3003",
+      "slug": "destination_change_denied",
+      "severity": "error",
+      "retryable": false,
+      "summary": "Only your leader can change this destination.",
+      "cause": "The trip was dispatched by a team leader.",
+      "action": "Ask your leader, or leave the team if you should not be under dispatch."
+    },
+    {
+      "code": "CBR-3004",
+      "slug": "no_route_for_vehicle",
+      "severity": "critical",
+      "retryable": false,
+      "summary": "No route exists that fits this vehicle.",
+      "cause": "No road on the way allows the declared height, weight or cargo.",
+      "action": "Check the vehicle's height and weight are correct, or pick a different destination.",
+      "note": "A legitimate and frequent answer for trucks, not a malfunction."
+    },
+    {
+      "code": "CBR-3005",
+      "slug": "route_outside_map",
+      "severity": "error",
+      "retryable": false,
+      "summary": "That destination is outside the mapped area.",
+      "cause": "The route falls outside the map region loaded on the server.",
+      "action": "Contact whoever administers the server: the map region needs to be extended."
+    },
+    {
+      "code": "CBR-3006",
+      "slug": "route_changed_by_leader",
+      "severity": "critical",
+      "retryable": false,
+      "summary": "Your leader changed the route.",
+      "cause": "The team leader assigned a new destination while driving.",
+      "action": "Follow the new directions when it is safe to do so.",
+      "note": "Not a failure. It is announced loudly on purpose: finding out late is worse than the change itself."
+    },
+    {
+      "code": "CBR-3007",
+      "slug": "no_active_route",
+      "severity": "warning",
+      "retryable": true,
+      "summary": "This trip has no route yet.",
+      "cause": "The route has not been calculated.",
+      "action": "Calculate the route before starting to navigate."
+    },
+
+    {
+      "code": "CBR-4001",
+      "slug": "location_permission_denied",
+      "severity": "critical",
+      "retryable": true,
+      "summary": "Carbura cannot access your location.",
+      "cause": "Location permission was denied.",
+      "action": "Grant location access in system settings. Without it there is no navigation."
+    },
+    {
+      "code": "CBR-4002",
+      "slug": "background_location_denied",
+      "severity": "warning",
+      "retryable": true,
+      "summary": "Navigation will stop when the screen turns off.",
+      "cause": "Background location permission was not granted.",
+      "action": "Allow location \"always\" so directions continue with the phone in your pocket."
+    },
+    {
+      "code": "CBR-4003",
+      "slug": "location_services_off",
+      "severity": "critical",
+      "retryable": true,
+      "summary": "Location is turned off on this phone.",
+      "cause": "System location services are disabled.",
+      "action": "Turn on location in system settings."
+    },
+    {
+      "code": "CBR-4004",
+      "slug": "off_route",
+      "severity": "warning",
+      "retryable": false,
+      "summary": "You have left the assigned route.",
+      "cause": "Your position is outside the route's tolerance corridor.",
+      "action": "Return to the route, or recalculate if the road is blocked.",
+      "note": "Your leader is notified. Nothing is blocked: blocking a driver would be dangerous."
+    },
+    {
+      "code": "CBR-4005",
+      "slug": "mock_location_detected",
+      "severity": "critical",
+      "retryable": false,
+      "summary": "This phone is reporting a simulated location.",
+      "cause": "The operating system reports the position comes from a mocking app.",
+      "action": "Turn off the mock location app. Your leader has been notified."
+    },
+    {
+      "code": "CBR-4006",
+      "slug": "position_rate_limited",
+      "severity": "warning",
+      "retryable": true,
+      "summary": "Too many position updates.",
+      "cause": "More than 180 positions were sent in one minute.",
+      "action": "Usually a bug in the app. Restart it."
+    },
+    {
+      "code": "CBR-4007",
+      "slug": "clock_out_of_sync",
+      "severity": "warning",
+      "retryable": true,
+      "summary": "This phone's clock is wrong.",
+      "cause": "The device clock differs from the server by more than five minutes.",
+      "action": "Set the date and time automatically in system settings.",
+      "note": "Positions are still recorded, but flagged for review."
+    },
+
+    {
+      "code": "CBR-5001",
+      "slug": "search_unavailable",
+      "severity": "warning",
+      "retryable": true,
+      "summary": "Place search is unavailable.",
+      "cause": "The search server did not answer.",
+      "action": "Try again, or pick from your saved places."
+    },
+    {
+      "code": "CBR-5002",
+      "slug": "showing_cached_results",
+      "severity": "info",
+      "retryable": false,
+      "summary": "Showing saved results.",
+      "cause": "There is no connection, so previously saved results are being used.",
+      "action": "Nothing. Addresses rarely move, but results may be out of date."
+    },
+    {
+      "code": "CBR-5003",
+      "slug": "place_not_found",
+      "severity": "info",
+      "retryable": true,
+      "summary": "Nothing found for that search.",
+      "cause": "The search returned no results.",
+      "action": "Try fewer words, or the street and city separately."
+    },
+    {
+      "code": "CBR-5004",
+      "slug": "duplicate_saved_place",
+      "severity": "error",
+      "retryable": false,
+      "summary": "You already saved a place with that name.",
+      "cause": "Home and Base can only exist once each.",
+      "action": "Rename the existing one, or save this as a custom place."
+    },
+
+    {
+      "code": "CBR-6001",
+      "slug": "no_connection",
+      "severity": "warning",
+      "retryable": true,
+      "summary": "No connection.",
+      "cause": "The device could not reach the server.",
+      "action": "Check your signal. Navigation continues with the route already downloaded."
+    },
+    {
+      "code": "CBR-6002",
+      "slug": "server_timeout",
+      "severity": "warning",
+      "retryable": true,
+      "summary": "The server took too long.",
+      "cause": "The request exceeded its time limit.",
+      "action": "Try again in a moment."
+    },
+    {
+      "code": "CBR-6003",
+      "slug": "server_error",
+      "severity": "error",
+      "retryable": true,
+      "summary": "The server had a problem.",
+      "cause": "The server returned an unexpected error.",
+      "action": "Try again. If it keeps happening, report this code."
+    },
+    {
+      "code": "CBR-6004",
+      "slug": "routing_server_down",
+      "severity": "error",
+      "retryable": true,
+      "summary": "The routing server is not responding.",
+      "cause": "Valhalla is unreachable or still building its map.",
+      "action": "Try again shortly. After a fresh deploy, building the map takes a while."
+    },
+    {
+      "code": "CBR-6005",
+      "slug": "app_out_of_date",
+      "severity": "error",
+      "retryable": false,
+      "summary": "This version of the app is too old.",
+      "cause": "The server sent data this version does not understand.",
+      "action": "Update Carbura."
+    },
+    {
+      "code": "CBR-6006",
+      "slug": "not_configured",
+      "severity": "critical",
+      "retryable": false,
+      "summary": "The app is not configured.",
+      "cause": "Required server addresses were not provided at build time.",
+      "action": "Rebuild with the required --dart-define values. See the README."
+    },
+
+    {
+      "code": "CBR-7001",
+      "slug": "vehicle_dimensions_missing",
+      "severity": "critical",
+      "retryable": false,
+      "summary": "This vehicle has no height or weight declared.",
+      "cause": "Routing will treat it as an ordinary vehicle.",
+      "action": "Add the height and weight before navigating. Without them the route may pass under a bridge your truck does not clear.",
+      "note": "The single most consequential missing field in the whole app."
+    },
+    {
+      "code": "CBR-7002",
+      "slug": "vehicle_dimensions_implausible",
+      "severity": "warning",
+      "retryable": true,
+      "summary": "Those dimensions look wrong.",
+      "cause": "A value is far outside what a real vehicle measures.",
+      "action": "Check the units. Height goes in centimeters, weight in kilograms."
+    },
+    {
+      "code": "CBR-7003",
+      "slug": "no_vehicle",
+      "severity": "warning",
+      "retryable": false,
+      "summary": "You have no vehicle set up.",
+      "cause": "No default vehicle is registered for this account.",
+      "action": "Add your vehicle so routes account for its size."
+    },
+
+    {
+      "code": "CBR-8001",
+      "slug": "permission_denied",
+      "severity": "error",
+      "retryable": false,
+      "summary": "You do not have permission to do that.",
+      "cause": "The database rejected the operation.",
+      "action": "If you believe this is wrong, report this code."
+    },
+    {
+      "code": "CBR-8002",
+      "slug": "rate_limited",
+      "severity": "warning",
+      "retryable": true,
+      "summary": "Too many requests.",
+      "cause": "The rate limit for this action was exceeded.",
+      "action": "Wait a moment and try again."
+    },
+    {
+      "code": "CBR-8003",
+      "slug": "impossible_movement",
+      "severity": "critical",
+      "retryable": false,
+      "summary": "An impossible jump in position was detected.",
+      "cause": "The distance between two positions implies a speed no vehicle reaches.",
+      "action": "Usually a GPS glitch. If it repeats, your leader will be notified."
+    },
+    {
+      "code": "CBR-8004",
+      "slug": "insecure_configuration",
+      "severity": "critical",
+      "retryable": false,
+      "summary": "The app was built with a server key.",
+      "cause": "A server-side key was found in the app configuration.",
+      "action": "Rebuild with the public key. A server key inside an app exposes the entire database.",
+      "note": "The app refuses to start. This is intentional."
+    },
+
+    {
+      "code": "CBR-9001",
+      "slug": "unexpected",
+      "severity": "error",
+      "retryable": true,
+      "summary": "Something went wrong.",
+      "cause": "An error occurred that the app does not recognize.",
+      "action": "Try again. If it keeps happening, report this code with what you were doing."
+    },
+    {
+      "code": "CBR-9002",
+      "slug": "malformed_server_data",
+      "severity": "error",
+      "retryable": false,
+      "summary": "The app received data it does not understand.",
+      "cause": "The server response did not match the expected shape.",
+      "action": "Usually means the app and the server are different versions. Update the app."
+    }
+  ]
+}
