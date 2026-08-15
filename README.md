@@ -75,3 +75,9 @@ apart, so what is written here is what the software actually does.
 
 The reference is in English. The app itself shows these messages translated, in
 English and Spanish.
+
+---
+
+Developed by Carbura  
+At Santurce, PR  
+Published the error reference so a driver can look up a code.
