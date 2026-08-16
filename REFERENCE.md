@@ -2,9 +2,9 @@
 
 Every error Carbura can show carries a stable code like `CBR-3004`.
 
-The code is what a driver reads out over the phone — *"it says CBR-3004"* —
-and what you look up here. It never changes once published, so this page
-stays correct for every version of the app in the field.
+A driver reads that out over the phone and you look it up here. Codes never
+change once published, so this page stays correct for every version of the
+app that is out in the field.
 
 > Generated from `errors/catalog.json`. Do not edit by hand: run
 > `node scripts/generate-error-docs.mjs` instead.
@@ -27,16 +27,16 @@ stays correct for every version of the app in the field.
 
 These mean somebody may be relying on something that is not working.
 
-- **[CBR-1005](#cbr-1005)** — This account is blocked.
-- **[CBR-3004](#cbr-3004)** — No route exists that fits this vehicle.
-- **[CBR-3006](#cbr-3006)** — Your leader changed the route.
-- **[CBR-4001](#cbr-4001)** — Carbura cannot access your location.
-- **[CBR-4003](#cbr-4003)** — Location is turned off on this phone.
-- **[CBR-4005](#cbr-4005)** — This phone is reporting a simulated location.
-- **[CBR-6006](#cbr-6006)** — The app is not configured.
-- **[CBR-7001](#cbr-7001)** — This vehicle has no height or weight declared.
-- **[CBR-8003](#cbr-8003)** — An impossible jump in position was detected.
-- **[CBR-8004](#cbr-8004)** — The app was built with a server key.
+- **[CBR-1005](#cbr-1005)**. This account is blocked.
+- **[CBR-3004](#cbr-3004)**. No route exists that fits this vehicle.
+- **[CBR-3006](#cbr-3006)**. Your leader changed the route.
+- **[CBR-4001](#cbr-4001)**. Carbura cannot access your location.
+- **[CBR-4003](#cbr-4003)**. Location is turned off on this phone.
+- **[CBR-4005](#cbr-4005)**. This phone is reporting a simulated location.
+- **[CBR-6006](#cbr-6006)**. The app is not configured.
+- **[CBR-7001](#cbr-7001)**. This vehicle has no height or weight declared.
+- **[CBR-8003](#cbr-8003)**. An impossible jump in position was detected.
+- **[CBR-8004](#cbr-8004)**. The app was built with a server key.
 
 ## Account and sign-in
 
@@ -46,7 +46,7 @@ These mean somebody may be relying on something that is not working.
 
 | | |
 |---|---|
-| Severity | Error — the action failed |
+| Severity | Error, the action failed |
 | Retrying helps | Yes |
 | Internal name | `invalid_credentials` |
 
@@ -62,8 +62,8 @@ These mean somebody may be relying on something that is not working.
 
 | | |
 |---|---|
-| Severity | Warning — degraded but usable |
-| Retrying helps | No — trying again will not change anything |
+| Severity | Warning, degraded but usable |
+| Retrying helps | No, trying again will not change anything |
 | Internal name | `session_expired` |
 
 **Why it happens.** The access token is no longer valid and could not be refreshed.
@@ -76,8 +76,8 @@ These mean somebody may be relying on something that is not working.
 
 | | |
 |---|---|
-| Severity | Error — the action failed |
-| Retrying helps | No — trying again will not change anything |
+| Severity | Error, the action failed |
+| Retrying helps | No, trying again will not change anything |
 | Internal name | `email_already_registered` |
 
 **Why it happens.** Sign-up was attempted with an email that is already in use.
@@ -90,7 +90,7 @@ These mean somebody may be relying on something that is not working.
 
 | | |
 |---|---|
-| Severity | Error — the action failed |
+| Severity | Error, the action failed |
 | Retrying helps | Yes |
 | Internal name | `password_too_weak` |
 
@@ -104,8 +104,8 @@ These mean somebody may be relying on something that is not working.
 
 | | |
 |---|---|
-| Severity | Critical — something being relied on is not working |
-| Retrying helps | No — trying again will not change anything |
+| Severity | Critical, something being relied on is not working |
+| Retrying helps | No, trying again will not change anything |
 | Internal name | `account_blocked` |
 
 **Why it happens.** An administrator blocked the account for abuse.
@@ -118,13 +118,43 @@ These mean somebody may be relying on something that is not working.
 
 | | |
 |---|---|
-| Severity | Error — the action failed |
-| Retrying helps | No — trying again will not change anything |
+| Severity | Error, the action failed |
+| Retrying helps | No, trying again will not change anything |
 | Internal name | `signup_disabled` |
 
 **Why it happens.** The server has sign-up disabled; accounts are created by invitation.
 
 **What to do.** Ask your team leader to create your account.
+
+### CBR-1007
+
+**You still lead a team.**
+
+| | |
+|---|---|
+| Severity | Error, the action failed |
+| Retrying helps | No, trying again will not change anything |
+| Internal name | `still_leads_team` |
+
+**Why it happens.** The account cannot be deleted while it owns a team. The team belongs to the people in it as much as to whoever created it, and its trip history is their record too.
+
+**What to do.** Hand the team over to another leader, or close it, and then delete the account.
+
+### CBR-1008
+
+**This account has no profile yet.**
+
+| | |
+|---|---|
+| Severity | Error, the action failed |
+| Retrying helps | Yes |
+| Internal name | `profile_not_set_up` |
+
+**Why it happens.** The account exists but its Carbura profile was never created, so there is nothing on file to check the request against.
+
+**What to do.** Open the app again. It creates the profile by itself the first time it loads. If this keeps happening, sign out and sign back in.
+
+> Kept apart from CBR-1005 on purpose. Both refuse the request, and the server is right to refuse either way, but telling somebody their account is blocked when it simply has no profile yet sends them looking for a punishment that does not exist.
 
 ## Teams and membership
 
@@ -134,7 +164,7 @@ These mean somebody may be relying on something that is not working.
 
 | | |
 |---|---|
-| Severity | Error — the action failed |
+| Severity | Error, the action failed |
 | Retrying helps | Yes |
 | Internal name | `invalid_join_code` |
 
@@ -150,7 +180,7 @@ These mean somebody may be relying on something that is not working.
 
 | | |
 |---|---|
-| Severity | Warning — degraded but usable |
+| Severity | Warning, degraded but usable |
 | Retrying helps | Yes |
 | Internal name | `too_many_join_attempts` |
 
@@ -164,8 +194,8 @@ These mean somebody may be relying on something that is not working.
 
 | | |
 |---|---|
-| Severity | Error — the action failed |
-| Retrying helps | No — trying again will not change anything |
+| Severity | Error, the action failed |
+| Retrying helps | No, trying again will not change anything |
 | Internal name | `team_full` |
 
 **Why it happens.** The team has reached its member limit.
@@ -178,8 +208,8 @@ These mean somebody may be relying on something that is not working.
 
 | | |
 |---|---|
-| Severity | Error — the action failed |
-| Retrying helps | No — trying again will not change anything |
+| Severity | Error, the action failed |
+| Retrying helps | No, trying again will not change anything |
 | Internal name | `not_a_member` |
 
 **Why it happens.** The action requires membership, and you left or were removed.
@@ -192,8 +222,8 @@ These mean somebody may be relying on something that is not working.
 
 | | |
 |---|---|
-| Severity | Error — the action failed |
-| Retrying helps | No — trying again will not change anything |
+| Severity | Error, the action failed |
+| Retrying helps | No, trying again will not change anything |
 | Internal name | `leader_only` |
 
 **Why it happens.** The action is restricted to leaders.
@@ -208,8 +238,8 @@ These mean somebody may be relying on something that is not working.
 
 | | |
 |---|---|
-| Severity | Warning — degraded but usable |
-| Retrying helps | No — trying again will not change anything |
+| Severity | Warning, degraded but usable |
+| Retrying helps | No, trying again will not change anything |
 | Internal name | `team_expired` |
 
 **Why it happens.** Teams are temporary and this one passed its end date.
@@ -222,8 +252,8 @@ These mean somebody may be relying on something that is not working.
 
 | | |
 |---|---|
-| Severity | Error — the action failed |
-| Retrying helps | No — trying again will not change anything |
+| Severity | Error, the action failed |
+| Retrying helps | No, trying again will not change anything |
 | Internal name | `too_many_teams` |
 
 **Why it happens.** A person can own at most 20 active teams.
@@ -238,8 +268,8 @@ These mean somebody may be relying on something that is not working.
 
 | | |
 |---|---|
-| Severity | Error — the action failed |
-| Retrying helps | No — trying again will not change anything |
+| Severity | Error, the action failed |
+| Retrying helps | No, trying again will not change anything |
 | Internal name | `trip_already_active` |
 
 **Why it happens.** Only one trip can be live at a time.
@@ -252,8 +282,8 @@ These mean somebody may be relying on something that is not working.
 
 | | |
 |---|---|
-| Severity | Error — the action failed |
-| Retrying helps | No — trying again will not change anything |
+| Severity | Error, the action failed |
+| Retrying helps | No, trying again will not change anything |
 | Internal name | `trip_closed` |
 
 **Why it happens.** Completed and cancelled trips cannot be reopened.
@@ -268,8 +298,8 @@ These mean somebody may be relying on something that is not working.
 
 | | |
 |---|---|
-| Severity | Error — the action failed |
-| Retrying helps | No — trying again will not change anything |
+| Severity | Error, the action failed |
+| Retrying helps | No, trying again will not change anything |
 | Internal name | `destination_change_denied` |
 
 **Why it happens.** The trip was dispatched by a team leader.
@@ -282,8 +312,8 @@ These mean somebody may be relying on something that is not working.
 
 | | |
 |---|---|
-| Severity | Critical — something being relied on is not working |
-| Retrying helps | No — trying again will not change anything |
+| Severity | Critical, something being relied on is not working |
+| Retrying helps | No, trying again will not change anything |
 | Internal name | `no_route_for_vehicle` |
 
 **Why it happens.** No road on the way allows the declared height, weight or cargo.
@@ -298,8 +328,8 @@ These mean somebody may be relying on something that is not working.
 
 | | |
 |---|---|
-| Severity | Error — the action failed |
-| Retrying helps | No — trying again will not change anything |
+| Severity | Error, the action failed |
+| Retrying helps | No, trying again will not change anything |
 | Internal name | `route_outside_map` |
 
 **Why it happens.** The route falls outside the map region loaded on the server.
@@ -312,8 +342,8 @@ These mean somebody may be relying on something that is not working.
 
 | | |
 |---|---|
-| Severity | Critical — something being relied on is not working |
-| Retrying helps | No — trying again will not change anything |
+| Severity | Critical, something being relied on is not working |
+| Retrying helps | No, trying again will not change anything |
 | Internal name | `route_changed_by_leader` |
 
 **Why it happens.** The team leader assigned a new destination while driving.
@@ -328,7 +358,7 @@ These mean somebody may be relying on something that is not working.
 
 | | |
 |---|---|
-| Severity | Warning — degraded but usable |
+| Severity | Warning, degraded but usable |
 | Retrying helps | Yes |
 | Internal name | `no_active_route` |
 
@@ -344,7 +374,7 @@ These mean somebody may be relying on something that is not working.
 
 | | |
 |---|---|
-| Severity | Critical — something being relied on is not working |
+| Severity | Critical, something being relied on is not working |
 | Retrying helps | Yes |
 | Internal name | `location_permission_denied` |
 
@@ -358,7 +388,7 @@ These mean somebody may be relying on something that is not working.
 
 | | |
 |---|---|
-| Severity | Warning — degraded but usable |
+| Severity | Warning, degraded but usable |
 | Retrying helps | Yes |
 | Internal name | `background_location_denied` |
 
@@ -372,7 +402,7 @@ These mean somebody may be relying on something that is not working.
 
 | | |
 |---|---|
-| Severity | Critical — something being relied on is not working |
+| Severity | Critical, something being relied on is not working |
 | Retrying helps | Yes |
 | Internal name | `location_services_off` |
 
@@ -386,8 +416,8 @@ These mean somebody may be relying on something that is not working.
 
 | | |
 |---|---|
-| Severity | Warning — degraded but usable |
-| Retrying helps | No — trying again will not change anything |
+| Severity | Warning, degraded but usable |
+| Retrying helps | No, trying again will not change anything |
 | Internal name | `off_route` |
 
 **Why it happens.** Your position is outside the route's tolerance corridor.
@@ -402,8 +432,8 @@ These mean somebody may be relying on something that is not working.
 
 | | |
 |---|---|
-| Severity | Critical — something being relied on is not working |
-| Retrying helps | No — trying again will not change anything |
+| Severity | Critical, something being relied on is not working |
+| Retrying helps | No, trying again will not change anything |
 | Internal name | `mock_location_detected` |
 
 **Why it happens.** The operating system reports the position comes from a mocking app.
@@ -416,7 +446,7 @@ These mean somebody may be relying on something that is not working.
 
 | | |
 |---|---|
-| Severity | Warning — degraded but usable |
+| Severity | Warning, degraded but usable |
 | Retrying helps | Yes |
 | Internal name | `position_rate_limited` |
 
@@ -430,7 +460,7 @@ These mean somebody may be relying on something that is not working.
 
 | | |
 |---|---|
-| Severity | Warning — degraded but usable |
+| Severity | Warning, degraded but usable |
 | Retrying helps | Yes |
 | Internal name | `clock_out_of_sync` |
 
@@ -448,7 +478,7 @@ These mean somebody may be relying on something that is not working.
 
 | | |
 |---|---|
-| Severity | Warning — degraded but usable |
+| Severity | Warning, degraded but usable |
 | Retrying helps | Yes |
 | Internal name | `search_unavailable` |
 
@@ -462,8 +492,8 @@ These mean somebody may be relying on something that is not working.
 
 | | |
 |---|---|
-| Severity | Info — nothing is broken |
-| Retrying helps | No — trying again will not change anything |
+| Severity | Info, nothing is broken |
+| Retrying helps | No, trying again will not change anything |
 | Internal name | `showing_cached_results` |
 
 **Why it happens.** There is no connection, so previously saved results are being used.
@@ -476,7 +506,7 @@ These mean somebody may be relying on something that is not working.
 
 | | |
 |---|---|
-| Severity | Info — nothing is broken |
+| Severity | Info, nothing is broken |
 | Retrying helps | Yes |
 | Internal name | `place_not_found` |
 
@@ -490,8 +520,8 @@ These mean somebody may be relying on something that is not working.
 
 | | |
 |---|---|
-| Severity | Error — the action failed |
-| Retrying helps | No — trying again will not change anything |
+| Severity | Error, the action failed |
+| Retrying helps | No, trying again will not change anything |
 | Internal name | `duplicate_saved_place` |
 
 **Why it happens.** Home and Base can only exist once each.
@@ -506,7 +536,7 @@ These mean somebody may be relying on something that is not working.
 
 | | |
 |---|---|
-| Severity | Warning — degraded but usable |
+| Severity | Warning, degraded but usable |
 | Retrying helps | Yes |
 | Internal name | `no_connection` |
 
@@ -520,7 +550,7 @@ These mean somebody may be relying on something that is not working.
 
 | | |
 |---|---|
-| Severity | Warning — degraded but usable |
+| Severity | Warning, degraded but usable |
 | Retrying helps | Yes |
 | Internal name | `server_timeout` |
 
@@ -534,7 +564,7 @@ These mean somebody may be relying on something that is not working.
 
 | | |
 |---|---|
-| Severity | Error — the action failed |
+| Severity | Error, the action failed |
 | Retrying helps | Yes |
 | Internal name | `server_error` |
 
@@ -548,7 +578,7 @@ These mean somebody may be relying on something that is not working.
 
 | | |
 |---|---|
-| Severity | Error — the action failed |
+| Severity | Error, the action failed |
 | Retrying helps | Yes |
 | Internal name | `routing_server_down` |
 
@@ -562,8 +592,8 @@ These mean somebody may be relying on something that is not working.
 
 | | |
 |---|---|
-| Severity | Error — the action failed |
-| Retrying helps | No — trying again will not change anything |
+| Severity | Error, the action failed |
+| Retrying helps | No, trying again will not change anything |
 | Internal name | `app_out_of_date` |
 
 **Why it happens.** The server sent data this version does not understand.
@@ -576,13 +606,29 @@ These mean somebody may be relying on something that is not working.
 
 | | |
 |---|---|
-| Severity | Critical — something being relied on is not working |
-| Retrying helps | No — trying again will not change anything |
+| Severity | Critical, something being relied on is not working |
+| Retrying helps | No, trying again will not change anything |
 | Internal name | `not_configured` |
 
 **Why it happens.** Required server addresses were not provided at build time.
 
 **What to do.** Rebuild with the required --dart-define values. See the README.
+
+### CBR-6007
+
+**This server does not have that address.**
+
+| | |
+|---|---|
+| Severity | Error, the action failed |
+| Retrying helps | No, trying again will not change anything |
+| Internal name | `no_such_endpoint` |
+
+**Why it happens.** The app asked for something the server does not serve. Either the app is older than the server, or it is pointed at the wrong address.
+
+**What to do.** Update the app. If it is already up to date, check the server address it was built with.
+
+> Answered at the front door rather than by the service behind it, so a request for an address that does not exist never costs any work. Anything that is not a real endpoint gets this, which also means a scan of common paths learns nothing from the difference between them.
 
 ## Vehicle and setup
 
@@ -592,8 +638,8 @@ These mean somebody may be relying on something that is not working.
 
 | | |
 |---|---|
-| Severity | Critical — something being relied on is not working |
-| Retrying helps | No — trying again will not change anything |
+| Severity | Critical, something being relied on is not working |
+| Retrying helps | No, trying again will not change anything |
 | Internal name | `vehicle_dimensions_missing` |
 
 **Why it happens.** Routing will treat it as an ordinary vehicle.
@@ -608,7 +654,7 @@ These mean somebody may be relying on something that is not working.
 
 | | |
 |---|---|
-| Severity | Warning — degraded but usable |
+| Severity | Warning, degraded but usable |
 | Retrying helps | Yes |
 | Internal name | `vehicle_dimensions_implausible` |
 
@@ -622,8 +668,8 @@ These mean somebody may be relying on something that is not working.
 
 | | |
 |---|---|
-| Severity | Warning — degraded but usable |
-| Retrying helps | No — trying again will not change anything |
+| Severity | Warning, degraded but usable |
+| Retrying helps | No, trying again will not change anything |
 | Internal name | `no_vehicle` |
 
 **Why it happens.** No default vehicle is registered for this account.
@@ -638,8 +684,8 @@ These mean somebody may be relying on something that is not working.
 
 | | |
 |---|---|
-| Severity | Error — the action failed |
-| Retrying helps | No — trying again will not change anything |
+| Severity | Error, the action failed |
+| Retrying helps | No, trying again will not change anything |
 | Internal name | `permission_denied` |
 
 **Why it happens.** The database rejected the operation.
@@ -652,7 +698,7 @@ These mean somebody may be relying on something that is not working.
 
 | | |
 |---|---|
-| Severity | Warning — degraded but usable |
+| Severity | Warning, degraded but usable |
 | Retrying helps | Yes |
 | Internal name | `rate_limited` |
 
@@ -666,8 +712,8 @@ These mean somebody may be relying on something that is not working.
 
 | | |
 |---|---|
-| Severity | Critical — something being relied on is not working |
-| Retrying helps | No — trying again will not change anything |
+| Severity | Critical, something being relied on is not working |
+| Retrying helps | No, trying again will not change anything |
 | Internal name | `impossible_movement` |
 
 **Why it happens.** The distance between two positions implies a speed no vehicle reaches.
@@ -680,8 +726,8 @@ These mean somebody may be relying on something that is not working.
 
 | | |
 |---|---|
-| Severity | Critical — something being relied on is not working |
-| Retrying helps | No — trying again will not change anything |
+| Severity | Critical, something being relied on is not working |
+| Retrying helps | No, trying again will not change anything |
 | Internal name | `insecure_configuration` |
 
 **Why it happens.** A server-side key was found in the app configuration.
@@ -698,7 +744,7 @@ These mean somebody may be relying on something that is not working.
 
 | | |
 |---|---|
-| Severity | Error — the action failed |
+| Severity | Error, the action failed |
 | Retrying helps | Yes |
 | Internal name | `unexpected` |
 
@@ -712,8 +758,8 @@ These mean somebody may be relying on something that is not working.
 
 | | |
 |---|---|
-| Severity | Error — the action failed |
-| Retrying helps | No — trying again will not change anything |
+| Severity | Error, the action failed |
+| Retrying helps | No, trying again will not change anything |
 | Internal name | `malformed_server_data` |
 
 **Why it happens.** The server response did not match the expected shape.
@@ -722,4 +768,4 @@ These mean somebody may be relying on something that is not working.
 
 ---
 
-46 codes, catalog version 1.
+49 codes, catalog version 1.

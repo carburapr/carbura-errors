@@ -1,6 +1,6 @@
 {
   "$comment": [
-    "Carbura error catalog — the single source of truth.",
+    "Carbura error catalog, the single source of truth.",
     "",
     "Every error the user can see has a stable code like CBR-3021. The code",
     "never changes once published: it is what a driver reads out on the phone",
@@ -83,7 +83,25 @@
       "cause": "The server has sign-up disabled; accounts are created by invitation.",
       "action": "Ask your team leader to create your account."
     },
-
+    {
+      "code": "CBR-1007",
+      "slug": "still_leads_team",
+      "severity": "error",
+      "retryable": false,
+      "summary": "You still lead a team.",
+      "cause": "The account cannot be deleted while it owns a team. The team belongs to the people in it as much as to whoever created it, and its trip history is their record too.",
+      "action": "Hand the team over to another leader, or close it, and then delete the account."
+    },
+    {
+      "code": "CBR-1008",
+      "slug": "profile_not_set_up",
+      "severity": "error",
+      "retryable": true,
+      "summary": "This account has no profile yet.",
+      "cause": "The account exists but its Carbura profile was never created, so there is nothing on file to check the request against.",
+      "action": "Open the app again. It creates the profile by itself the first time it loads. If this keeps happening, sign out and sign back in.",
+      "note": "Kept apart from CBR-1005 on purpose. Both refuse the request, and the server is right to refuse either way, but telling somebody their account is blocked when it simply has no profile yet sends them looking for a punishment that does not exist."
+    },
     {
       "code": "CBR-2001",
       "slug": "invalid_join_code",
@@ -149,7 +167,6 @@
       "cause": "A person can own at most 20 active teams.",
       "action": "Archive a team you no longer use."
     },
-
     {
       "code": "CBR-3001",
       "slug": "trip_already_active",
@@ -216,7 +233,6 @@
       "cause": "The route has not been calculated.",
       "action": "Calculate the route before starting to navigate."
     },
-
     {
       "code": "CBR-4001",
       "slug": "location_permission_denied",
@@ -282,7 +298,6 @@
       "action": "Set the date and time automatically in system settings.",
       "note": "Positions are still recorded, but flagged for review."
     },
-
     {
       "code": "CBR-5001",
       "slug": "search_unavailable",
@@ -319,7 +334,6 @@
       "cause": "Home and Base can only exist once each.",
       "action": "Rename the existing one, or save this as a custom place."
     },
-
     {
       "code": "CBR-6001",
       "slug": "no_connection",
@@ -374,7 +388,16 @@
       "cause": "Required server addresses were not provided at build time.",
       "action": "Rebuild with the required --dart-define values. See the README."
     },
-
+    {
+      "code": "CBR-6007",
+      "slug": "no_such_endpoint",
+      "severity": "error",
+      "retryable": false,
+      "summary": "This server does not have that address.",
+      "cause": "The app asked for something the server does not serve. Either the app is older than the server, or it is pointed at the wrong address.",
+      "action": "Update the app. If it is already up to date, check the server address it was built with.",
+      "note": "Answered at the front door rather than by the service behind it, so a request for an address that does not exist never costs any work. Anything that is not a real endpoint gets this, which also means a scan of common paths learns nothing from the difference between them."
+    },
     {
       "code": "CBR-7001",
       "slug": "vehicle_dimensions_missing",
@@ -403,7 +426,6 @@
       "cause": "No default vehicle is registered for this account.",
       "action": "Add your vehicle so routes account for its size."
     },
-
     {
       "code": "CBR-8001",
       "slug": "permission_denied",
@@ -441,7 +463,6 @@
       "action": "Rebuild with the public key. A server key inside an app exposes the entire database.",
       "note": "The app refuses to start. This is intentional."
     },
-
     {
       "code": "CBR-9001",
       "slug": "unexpected",
